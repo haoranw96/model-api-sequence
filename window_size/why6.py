@@ -74,6 +74,8 @@ if __name__ == '__main__':
     global apiWindowMap
     global labelMap
 
+    sys.stdout.write('Usage: python3 why6.py train/ test/ train_label.txt test_label.txt [window size]\n')
+
     train = sys.argv[1]
     test = sys.argv[2]
     train_label_fn = sys.argv[3]
