@@ -6,7 +6,7 @@ import numpy as np
 
 def build_feature_vector(win_list, benign):
     for filename in os.listdir(benign):
-        with open(benign + '/' + filename) as f:
+        with open(benign + '/' + filename, encoding='windows-1252') as f:
             first = f.readline()
             first = first[first.find(' ')+1: first.find('\n')]
             while first:
@@ -27,7 +27,7 @@ def build_feature_vector(win_list, benign):
 def construct_window_vector(file):
     apiWindow = dict()
     for filename in os.listdir(file):
-        with open(file + '/' + filename) as f:
+        with open(file + '/' + filename, encoding='windows-1252') as f:
             windowCount = {i: 0 for i in win_list}
             first = f.readline()
             first = first[first.find(' ') + 1: first.find('\n')]
@@ -66,47 +66,39 @@ def construct_label_vector(file):
     return labels
 
 if __name__ == '__main__':
-    global count
-    count = 0
 
-    sys.stdout.write('Usage: python3 why6.py train/ test/ train_label.txt test_label.txt [window size]\n')
+    sys.stdout.write('Usage: python3 why6.py benign/ malicious/ \n')
 
-    benign = sys.argv[1]
-    malicious = sys.argv[2]
-    #train_label_fn = sys.argv[3]
-    #test_label_fn = sys.argv[4]
-    windowSize = int(sys.argv[3])
+    windowSize = 1
+    fp = open("foreign_window.csv", "w+")
+    fp.write("window size, average # of foreign window\n")
+    fp.close()
 
-    # Build feature vectors for api files
-    sys.stdout.write('Reading in api.txt files...\n')
-    win_list = list()
-    build_feature_vector(win_list, benign)
-    win_list.append("foreign")
-    sys.stdout.write('Done\n')
+    fp = open("foreign_window.csv", "a")
+    while windowSize < 150:
+        benign = sys.argv[1]
+        malicious = sys.argv[2]
 
-    # Construct vector for each training files
-    sys.stdout.write('Constructing window vector for train and test files...\n')
-    #trainApiWindow = construct_window_vector(benign)
-    #x_train = np.asarray(list(trainApiWindow.values()))
-    testApiWindow = construct_window_vector(malicious)
-    x_test = np.asarray(list(testApiWindow.values()))
+        # Build feature vectors for api files
+        sys.stdout.write('Reading in api.txt files...\n')
+        win_list = list()
+        build_feature_vector(win_list, benign)
+        win_list.append("foreign")
+        sys.stdout.write('Done\n')
 
-    sys.stdout.write("Done\n")
+        # Construct vector for each training files
+        sys.stdout.write('Constructing window vector for train and test files...\n')
+        testApiWindow = construct_window_vector(malicious)
+        x_test = np.asarray(list(testApiWindow.values()))
 
-    for k,v in testApiWindow:
-        print(k, v["foreign"])
+        sys.stdout.write("Done\n")
 
-    # Construct label vector for training data
-    #train_label = construct_label_vector(train_label_fn)
-    #y_train = np.asarray(train_label)
+        sum = 0
+        for (k,v) in testApiWindow.items():
+            sum += v[-1]
+            #print(k, v[-1])
+        print ('window size: %d, average number of foreign window: %d' % (windowSize, sum/20))
+        fp.writelines('%d, %f\n' % (windowSize, sum/20))
 
-    # Construct label vector for testing data
-    #test_label = construct_label_vector(test_label_fn)
-    #y_test = np.asarray(test_label)
-
-    # print(x_train.shape)
-    # print(y_train.shape)
-    # print(x_test.shape)
-    # print(y_test.shape)
-    # fit svm with training data and label
-   
+        windowSize+=1
+    fp.close()
