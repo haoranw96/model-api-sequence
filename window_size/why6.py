@@ -75,7 +75,7 @@ if __name__ == '__main__':
     fp.close()
 
     fp = open("foreign_window.csv", "a")
-    while windowSize < 150:
+    while windowSize < 300:
         benign = sys.argv[1]
         malicious = sys.argv[2]
 
