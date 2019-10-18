@@ -99,3 +99,5 @@ ENV/
 
 # mypy
 .mypy_cache/
+benign/.DS_Store
+benign/0000679e51c025668529bb0ae5ad8a9aaecb0112464fc76df2f1c24f28534812
