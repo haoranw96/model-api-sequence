@@ -70,13 +70,21 @@ def sequence_generator(folder, sample, foldIDs, batchSize, task, convert):
 
                         num = 0
 		    
-		    # shape the data as [sample, time steps, feature]
-                        yield (rv_x, 1, rv_y)
+                        yield (rv_x, rv_y)
 
         # Yield remaining set
         if len(xSet) > 0:
-	    # shape the data as [sample, time steps, feature]
-            yield (xSet, 1, ySet)
+            yield (xSet, ySet)
+
+# reshape the data into a matrix with [look_back] previous api's and the label of this api
+# https://machinelearningmastery.com/time-series-prediction-lstm-recurrent-neural-networks-python-keras/
+def create_dataset(dataset, look_back=1):
+    dataX, dataY = [], []
+    for i in range(len(dataset) - look_back):
+        a = dataset[i:(i + look_back), 0]
+        dataX.append(a)
+        dataY.append(dataset[i + look_back - 1, 1])
+    return numpy.array(dataX), numpy.array(dataY)
 
 # Builds LSTM model
 def build_LSTM_model(trainData, trainBatches, testData, testBatches, windowSize, class_count, numCalls, batch_size):
@@ -86,8 +94,22 @@ def build_LSTM_model(trainData, trainBatches, testData, testBatches, windowSize,
 
     embedding_size = 256
 
+    # set time steps to be 1, instead of windowSize
+    time_step = 1
+
     # https://keras.io/callbacks/#earlystopping
     early_stop = cb.EarlyStopping(monitor='sparse_categorical_accuracy', min_delta = 0.0001, patience = 3)
+
+    # reshape train data and test data 
+    # reshape dataset into the api of the previous [look_back] api's and Y is the label of this api 
+    look_back = api_count
+    trainX, trainY = create_dataset(trainData, look_back)
+    testX, testY = create_dataset(testData, look_back)
+
+    # reshape input to be [samples, time steps, features]
+    
+    trainX = numpy.reshape(trainX, (trainX.shape[0], time_step, trainX.shape[1]))
+    testX = numpy.reshape(testX, (testX.shape[0], time_step, testX.shape[1]))
 
     model = Sequential()
 
@@ -101,13 +123,13 @@ def build_LSTM_model(trainData, trainBatches, testData, testBatches, windowSize,
     # https://stackoverflow.com/questions/40695452/stateful-lstm-with-embedding-layer-shapes-dont-match
     api_count = numCalls+1  # +1 because 0 is our padding number
     # input one api at a time
-    model.add(Embedding(input_dim=api_count, output_dim=256, input_length=1))
+    model.add(Embedding(input_dim=api_count, output_dim=256, input_length=time_step))
 
     # https://keras.io/layers/recurrent/#lstm
 #   model.add(LSTM(num_units,input_shape=(windowSize, api_count),return_sequences=False))
     #TODO - GPU stuffs
-    # input one api at a time, and look at previous api_count api's
-    model.add(CuDNNLSTM(num_units,input_shape=(1, api_count),return_sequences=False))
+    # input one api at a time, and look at previous [look_back] api's
+    model.add(CuDNNLSTM(num_units,input_shape=(time_step, look_back),return_sequences=False))
 
     # NOTE:  If I want to add more layers
     # https://stackoverflow.com/questions/40331510/how-to-stack-multiple-lstm-in-keras
@@ -140,7 +162,7 @@ def build_LSTM_model(trainData, trainBatches, testData, testBatches, windowSize,
     # https://keras.io/models/model/#fit_generator
     hist = model.fit_generator(
         # Data to train
-        trainData,
+        （trainX, trainY）, 
         # Use multiprocessing because python Threading isn't really
         # threading: https://docs.python.org/3/glossary.html#term-global-interpreter-lock
         use_multiprocessing = True,
@@ -151,7 +173,7 @@ def build_LSTM_model(trainData, trainBatches, testData, testBatches, windowSize,
         # Number of epochs
         epochs = 100,
         # Validation data (will not be trained on)
-        validation_data = testData,
+        validation_data = (testX, testY),
         validation_steps = testBatches,
         # Do not shuffle batches.
         shuffle = False,
