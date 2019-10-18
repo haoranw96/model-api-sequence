@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d26b66c5-2e7b-470d-b9cc-eeb1e10bcdf5" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/window_size/foreign_window.csv" beforeDir="false" afterPath="$PROJECT_DIR$/window_size/foreign_window.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/window_size/why6.py" beforeDir="false" afterPath="$PROJECT_DIR$/window_size/why6.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/window_size/window_graph.Rmd" beforeDir="false" afterPath="$PROJECT_DIR$/window_size/window_graph.Rmd" afterDir="false" />
-    </list>
+    <list default="true" id="d26b66c5-2e7b-470d-b9cc-eeb1e10bcdf5" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,7 +13,7 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/window_size/why6.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-67">
+            <state relative-caret-position="15">
               <caret line="77" column="26" selection-start-line="77" selection-start-column="26" selection-end-line="77" selection-end-column="26" />
               <folding>
                 <element signature="e#24#34#0" expanded="true" />
@@ -117,7 +113,7 @@
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Version Control" order="7" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="8" sideWeight="0.4988086" visible="true" weight="0.30821916" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="8" sideWeight="0.4988086" visible="true" weight="0.3068493" />
       <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.50119144" side_tool="true" weight="0.329927" />
       <window_info anchor="bottom" id="Python Console" order="10" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -147,9 +143,12 @@
     <entry file="file://$PROJECT_DIR$/window_size/foreign_window.csv">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
+    <entry file="file://$PROJECT_DIR$/window_size/train_mal_label.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/window_size/why6.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-67">
+        <state relative-caret-position="15">
           <caret line="77" column="26" selection-start-line="77" selection-start-column="26" selection-end-line="77" selection-end-column="26" />
           <folding>
             <element signature="e#24#34#0" expanded="true" />
