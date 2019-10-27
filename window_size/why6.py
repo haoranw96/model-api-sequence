@@ -71,7 +71,7 @@ if __name__ == '__main__':
 
     windowSize = 1
     fp = open("foreign_window.csv", "w+")
-    fp.write("window size, average # of foreign window\n")
+    fp.write("window size, average # of foreign window, total # of windows\n")
     fp.close()
 
     fp = open("foreign_window.csv", "a")
@@ -94,11 +94,13 @@ if __name__ == '__main__':
         sys.stdout.write("Done\n")
 
         sum = 0
+        num_win = 0
         for (k,v) in testApiWindow.items():
             sum += v[-1]
+            num_win = len(v) - 1
             #print(k, v[-1])
-        print ('window size: %d, average number of foreign window: %d' % (windowSize, sum/20))
-        fp.writelines('%d, %f\n' % (windowSize, sum/20))
+        print ('window size: %d, average number of foreign window: %d, total number of windows: %d ' % (windowSize, sum/20, num_win))
+        fp.writelines('%d, %f, %d\n' % (windowSize, sum/20, num_win))
 
         windowSize+=1
     fp.close()

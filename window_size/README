@@ -1,0 +1,5 @@
+To run: 
+python3 why6.py benign/ malicious/
+
+To graph: 
+open .Rmd file with RStudio and run
